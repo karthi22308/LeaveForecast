@@ -91,12 +91,12 @@ def construct_dataframe( x):
     new_df = pd.DataFrame(rows, columns=['employeeid', 'month', 'leavedays'])
 
     return new_df
-def create_excel_file(df1, df2):
+def create_excel_file(df1):
     """Create an Excel file with two sheets and return it as a bytes buffer."""
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
         df1.to_excel(writer, sheet_name='Sheet1', index=False)
-        df2.to_excel(writer, sheet_name='Sheet2', index=False)
+     #   df2.to_excel(writer, sheet_name='Sheet1', index=False,startcol=3)
     buffer.seek(0)  # Move to the beginning of the buffer
     return buffer
 def predict_leaves(model, next_month_features):
@@ -181,9 +181,8 @@ if st.button('Submit'):
 
     model = train_model(attendance_df)
 
+    next_month = month_number
 
-    current_month = datetime.datetime.now().month
-    next_month = (current_month % 6) + 1
     next_month_features = attendance_df[attendance_df['month'] == next_month][
     ['leaves_last_month', 'leaves_last_2_months', 'leaves_last_6_months', 'holiday_count']]
 
@@ -194,10 +193,21 @@ if st.button('Submit'):
         predicted_leaves_df['predicted_leaves'] = predicted_leaves
         grouped_predictions = predicted_leaves_df.groupby('employeeid').sum().reset_index()
         real = getrealdata(month_number+6)
-        filtered_df = real[real['employeeid'].isin(grouped_predictions['employeeid'])]
+        grouped_predictions = grouped_predictions.merge(real[['employeeid', 'leavedays']],
+                                                        on='employeeid',
+                                                        how='left')
+
+        # Rename the 'leavedays' column from 'real' DataFrame to 'actual_leave'
+        grouped_predictions = grouped_predictions.rename(columns={'leavedays': 'actual_leave'})
+
+
+        #employee_ids_in_df1 = grouped_predictions['employeeid'].unique()
+      #  st.write(real)
+       # st.write(employee_ids_in_df1)
+        #filtered_df = real[real['employeeid'].isin(employee_ids_in_df1)]
 
         st.write('Predicted Leaves for Next Month')
-        excel_buffer = create_excel_file(grouped_predictions, filtered_df)
+        excel_buffer = create_excel_file(grouped_predictions)
 
         # Provide the download link
         st.download_button(
