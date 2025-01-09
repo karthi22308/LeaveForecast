@@ -1,0 +1,114 @@
+->entities folder created
+
+
+
+
+Entity framework:
+
+w/o entity framework we need to write sql queries
+
+
+
+db context class i s a n instance to the db using linq queries`
+
+->need nuget package
+.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Design
+
+-> create context class -- storecontext.cs
+
+-> add db context to program.cs services
+after adding connection we should migrate the codde
+
+
+nuget pkm codes -- 
+
+-> Add-Migration InitialMigration first migration
+
+-> Update-Database for migration update
+
+
+-------------------------
+create DbInitializer
+app.MapControllers();
+
+var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
+var logger = scope.ServiceProvider.GetRequiredService < ILogger<Program>>();
+try
+{
+    context.Database.Migrate();
+    DbInitializer.Initialize(context);
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "a problem");
+}
+
+add this code in program.cs - ensure initialization and migration
+-----------------------------------------------------------------------
+creating an api controller
+ file added api controller that returns synschronously
+
+-------------------------------------
+to return asynchronous:
+changed in the api
+
+------------------------------------------------
+
+to create a gitignore file
+
+dotnet new gitignore -- use this command
+------------------------------------------
+
+
+React 
+React notes:
+
+resct  ois a javascript library
+
+
+html tags with js library code
+
+
+react is just a library 
+angular is an entire framework
+
+-------------------------------------------------
+
+npm create vite@latest
+
+cd client
+npm install
+npm run dev
+
+
+
+
+
+-------------------------------------------
+Cannot find module 'react-chartjs-2' or its corresponding type declarations.
+Cannot find module 'chart.js/auto' or its corresponding type declarations.t
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

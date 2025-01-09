@@ -1,0 +1,6 @@
+@Designathon_SkillNavigatorWebAPI_HostAddress = http://localhost:5220
+
+GET {{Designathon_SkillNavigatorWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
